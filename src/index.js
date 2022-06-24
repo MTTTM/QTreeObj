@@ -46,9 +46,11 @@ MenuStore.prototype.add = function(fileName, path, fileObj) {
     //添加到指定目录,添加成功 返回true，否则false
 MenuStore.prototype.addToDir = function(fileName, dirName, fileObj) {
         let dirPathStr = this.getDirPath(dirName);
+        dirPathStr = dirPathStr + ".children"
         if (!dirPathStr) {
             return null;
         }
+        console.log("addToDir", fileName, 'dirPathStr', dirPathStr)
         return this.add(fileName, dirPathStr, fileObj);
 
     }
