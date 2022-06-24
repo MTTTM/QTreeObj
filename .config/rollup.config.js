@@ -8,6 +8,7 @@ export default [{
         file: "dist/index.js",
         format: "umd",
         sourcemap: false,
+        strict: false,
     },
     plugins: [
         cleanup({

@@ -8,10 +8,12 @@ export default [{
         file: "tmp/index.js",
         format: "umd",
         sourcemap: true,
+        strict: false,
     },
     plugins: [
         babel({
             exclude: "node_modules/**",
+            "sourceType": "module"
         }),
         livereload(),
         serve({

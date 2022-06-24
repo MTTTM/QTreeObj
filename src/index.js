@@ -1,36 +1,3 @@
-// _store的数据格式
-// var data = {
-//       menu: [{
-//           label: "未分类",
-//           id: "x1",
-//           children: [{
-//               label: "未分类.jm",
-//               path: "c:/path/xxx/未分类.jm",
-//               id: "x2",
-//           }]
-//       }, {
-//           label: "分类1",
-//           id: "x2",
-//           children: [{
-//               label: "分类1.jm",
-//               path: "c:/path/xxx/分类1.jm",
-//               id: "x4",
-//           }, {
-//               label: "分类2",
-//               id: "x5",
-//               children: [{
-//                   label: "分类1.jm",
-//                   path: "c:/path/xxx/分类1.jm",
-//                   id: "x6"
-//               }]
-//           }]
-//       }, ],
-//       reflex: {
-//           "未分类.jm": "menu.0.children.0",
-//           "分类1.jm": "menu.1.children.0",
-//           "分类2.jm": "menu.1.children.1.children0",
-//       }
-//   }
 /**
  * 
  * 核心是用路径来读写
@@ -55,10 +22,10 @@ MenuStore.prototype.getStore = function() {
     /**
      * fileName:"文件名.jm"
      *  path: 格式"menu.0.children.0""
+     * 添加成功返回true，否则false
      **/
 MenuStore.prototype.add = function(fileName, path, fileObj) {
         let menuPathObj = this.parsePathStr(path);
-
         if (menuPathObj && Array.isArray(menuPathObj)) {
             if (fileObj) {
                 menuPathObj.push(fileObj);
@@ -70,10 +37,34 @@ MenuStore.prototype.add = function(fileName, path, fileObj) {
             }
             //更新索引
             this._store.reflex[fileName] = `${path}.${menuPathObj.length - 1}`;
+            return true;
         } else {
             console.warn(`add 路径store.${path}不存在`)
+            return false;
         }
-        console.log("add 路径", menuPathObj)
+    }
+    //添加到指定目录,添加成功 返回true，否则false
+MenuStore.prototype.addToDir = function(fileName, dirName, fileObj) {
+        let dirPathStr = this.getDirPath(dirName);
+        if (!dirPathStr) {
+            return null;
+        }
+        return this.add(fileName, dirPathStr, fileObj);
+
+    }
+    //从指定目录删除,删除成功返回true，否则null
+MenuStore.prototype.removeFromDir = function(fileName, dirName) {
+        if (!this._store.reflex[fileName]) {
+            return null;
+        }
+        let dirPathStr = this.getDirPath(dirName);
+        let fileNamePathStr = this.getItemPath(fileName);
+        let fileNamePathArr = fileNamePathStr.split(".");
+        let index = fileNamePathArr[fileNamePathArr.length - 1];
+        index = Number(index);
+        fileNamePathStr.splice(index, 1);
+        delete this._store.reflex[fileName];
+        return true;
     }
     /**
      * 根据文件名字删除路径，成功返回false，失败返回null
@@ -91,7 +82,7 @@ MenuStore.prototype.removeByName = function(fileName) {
     if (isChildItem) {
         this._parentRemoveItemByItemPathArr(pathArr);
     } else {
-        delete menuPathObj;
+        // delete menuPathObj;
     }
 
     let menuPathObj = this.parsePathStr(pathStr);

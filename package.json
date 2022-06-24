@@ -1,14 +1,14 @@
 {
-    "name": "qcontextmenu",
+    "name": "QTreeObj",
     "version": "0.0.3",
-    "description": "qcontextmenu is a simple  contextmenu menu tool for web",
+    "description": "QTreeObj is a simple  contextmenu menu tool for web",
     "main": "dist/index.js",
     "files": [
         "dist"
     ],
     "scripts": {
-        "build": "rollup -c .config/rollup.config.js",
-        "dev": "rollup -c .config/rollup.config.dev.js -w",
+        "build": "rollup -c .config/rollup.config.js --no-strict  ",
+        "dev": "rollup -c .config/rollup.config.dev.js -w --no-strict  ",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest",
         "test-legacy": "jest tests/legacy",
         "test-es6": "NODE_OPTIONS=--experimental-vm-modules jest tests/unit",
@@ -17,18 +17,18 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/MTTTM/qcontextmenu"
+        "url": "https://github.com/MTTTM/QTreeObj"
     },
     "author": {
         "name": "MTTTM"
     },
     "license": "BSD-3-Clause",
     "bugs": {
-        "url": "https://github.com/MTTTM/qcontextmenu/issues"
+        "url": "https://github.com/MTTTM/QTreeObj/issues"
     },
-    "homepage": "https://github.com/MTTTM/qcontextmenu",
+    "homepage": "https://github.com/MTTTM/QTreeObj",
     "keywords": [
-        "qcontextmenu",
+        "QTreeObj",
         "contextmenu",
         "contextMenu",
         "web contextMenu"

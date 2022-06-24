@@ -10,7 +10,7 @@
 
 <body>
     hello,world!!
-    <script src="./tmp/index.js"></script>
+    <script src="./src/index.js"></script>
     <script>
         var data = {
             menu: [{
@@ -68,16 +68,20 @@
         store.addGroup("menu下的目录", "menu");
         console.log("add后", store.getStore())
 
+        //添加内容到目录
+        console.log("addToDir前", store.getStore())
+        store.addToDir("新增到目录1.jm", 'menu下的目录')
+        store.addToDir("新增到目录2.jm", 'menu下的目录')
+        console.log("aaddToDir后", store.getStore())
 
-
-        store.add("解码.jm", "menu.2.children");
-        store.add("解码2.jm", "menu.2.children");
-        console.log("add后", store.getStore())
-            //删除目录
-        console.log("remove前", store.getStore())
-            //删除目录后，内部的文件移动到未知目录下，也就是menu[0].children下面
-        store.removeGroup("menu下的目录");
-        console.log("remove后", store.getStore())
+        // store.add("解码.jm", "menu.2.children");
+        // store.add("解码2.jm", "menu.2.children");
+        // console.log("add后", store.getStore())
+        //     //删除目录
+        // console.log("remove前", store.getStore())
+        //     //删除目录后，内部的文件移动到未知目录下，也就是menu[0].children下面
+        // store.removeGroup("menu下的目录");
+        // console.log("remove后", store.getStore())
     </script>
 </body>
 
