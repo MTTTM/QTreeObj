@@ -1,0 +1,29 @@
+! function(e, t) { "object" == typeof exports && "undefined" != typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define(t) : (e = "undefined" != typeof globalThis ? globalThis : e || self).ContextMenu = t() }(this, (function() { "use strict";
+
+    function e(t) { if (!(this instanceof e)) throw "Constructor must be instantiated"; let n = this._create_menu_box(t); return this.menu = n, this._init(), this } return e.prototype._init = function() { let e = this;
+        this.menu._self = this, e._data = [], e._x = 0, e._y = 0, e.__getParentDom = e._getParent(), e._blurHideCallback = e.hide.bind(this), document.removeEventListener("click", e._blurHideCallback), document.addEventListener("click", e._blurHideCallback), e._bindEvent() }, e.prototype._bindEvent = function() { this._menuItemHoverEvent(), this.menu.addEventListener("click", this._menuItemClickEvent) }, e.prototype._getParent = function(e) { let t = 0,
+            n = e && e > 0 ? e : 100; return function e(i, o) { if (t++, t >= n) return null; let s = i.parentNode; return s ? o(s) ? s : e(s, o) : void 0 } }, e.prototype._menuItemHoverEvent = function(e) { this.menu.onmouseover = function(e) { let t = e.target; if ("menu-item" === t.tagName.toLocaleLowerCase()) { const e = t.querySelector("menu");
+                e && (this._self._computedSubMenuPos(e, t), e.style.display = "block"); let n = t.parentElement.querySelectorAll("menu-item"); for (let e = 0; e < n.length; e++)
+                    if (n[e] && n[e] && n[e] !== t) { const t = n[e].querySelector("menu");
+                        t && (t.style.display = "none") } } }, this.menu.onmouseleave = function(e) { let t = document.querySelectorAll("menu"); for (let e = 0; e < t.length; e++) t[e].style.display = "none" }, this.menu.oncontextmenu = function(e) { e.stopPropagation(), e.preventDefault() } }, e.prototype._menuItemClickEvent = function(e) { e.stopPropagation(); let t = e.target,
+            n = "menu-item" === t.tagName.toLocaleLowerCase() ? t : this.self.__getParentDom(t, (function(e) { return "menu-item" === e.tagName.toLocaleLowerCase() }));
+        n && "function" == typeof n.cusData.callback && n.cusData.callback(n.cusData), this.self.hide() }, e.prototype._create_menu_box = function(e) { let t = document.createElement("menu"); return t.self = this, t.style.display = "none", t.style.width = "150px", e.appendChild(t), t }, e.prototype._create_menu_item = function(e, t) { let n = document.createElement("menu-item"); return n.style.cssText = "\n  padding: 5px 10px 5px 15px;\n  cursor: pointer;\n  display: block;\n  text-align: left;\n  position:relative;\n  white-space:nowrap;\n  width:150px;\n  ", n.innerHTML = e.text, t ? t.appendChild(n) : this.menu.appendChild(n), n.cusData = e, n }, e.prototype._computedSubMenuPos = function(e, t) { let n = window.getComputedStyle(this.menu),
+            i = parseInt(n.width),
+            o = window.getComputedStyle(e),
+            s = parseInt(o.width),
+            a = parseInt(o.width),
+            u = window.innerWidth,
+            r = window.innerHeight;
+        e.style.cssText = `\n              top: 0px;\n              left: ${s}px;\n              position: absolute;\n              width: 150px;\n              padding: 5px 0px;\n              z-index: 9999;\n              background: rgb(255, 255, 255);\n              box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px 0px;\n              border-radius: 5px;\n              font-size: 12px;\n              width:150px;\n              display: none;\n              `, this._x + s + i > u - 30 && (e.style.left = -s + "px"), this._y + a > r - a && (e.style.top = "auto", e.style.bottom = "0px") }, e.prototype._computedMenuPos = function() { const e = this.menu; let t = window.getComputedStyle(this.menu),
+            n = parseInt(t.width),
+            i = this.menu.getBoundingClientRect().height,
+            o = window.innerWidth,
+            s = window.innerHeight;
+        console.log("menuHeight", i), e.style.cssText = `\n              top:${this._y}px;\n              left: ${this._x}px;\n              display: none;\n              position: fixed;\n              width: 150px;\n              padding: 5px 0px;\n              z-index: 9999;\n              background: rgb(255, 255, 255);\n              box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px 0px;\n              border-radius: 5px;\n              font-size: 12px;\n              display: none;\n              `, this._x + n > o - 30 && (e.style.left = o - n + "px"), this._y + i > s - i && (e.style.bottom = 0, e.style.top = "auto") }, e.prototype._update_submenu = function(e, t) { let n = t,
+            i = this._create_menu_box(n);
+        n.appendChild(i), e.children.forEach((e => { let t = this._create_menu_item(e, i);
+            e.children && this._update_submenu(e, t) })) }, e.prototype._update_menu = function() { this.menu.innerHTML = "", this._data.forEach((e => { let t = this._create_menu_item(e);
+            e.children && this._update_submenu(e, t) })) }, e.prototype.show = function(e, t) { if (this._x = parseInt(t.x), this._y = parseInt(t.y), this.menu.style.display = "block", "function" == typeof e) { if (this._data = e(), !this._data || !Array.isArray(this._data)) throw "Please return an array when the data parameter is a function";
+            this._update_menu() } else { if (!Array.isArray(e)) throw "Please check if the parameter is wrong, it should be an array and an object";
+            this._data = [...e], this._update_menu() }
+        console.log("this.menu", this.menu.style.display), this._computedMenuPos(this.menu), this.menu.style.display = "block" }, e.prototype.hide = function() { this.menu.style.display = "none" }, e.prototype.destroy = function() { this.menu.style.display = "none", this.menu.parentNode.removeChild(this.menu), document.removeEventListener("click", self._blurHideCallback) }, e }));
