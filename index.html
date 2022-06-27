@@ -12,38 +12,32 @@
     hello,world!!
     <script src="./src/index.js"></script>
     <script>
-        var data = {
-            menu: [{
-                label: "未分类",
-                id: "x1",
-                children: [{
-                    label: "未分类.jm",
-                    path: "c:/path/xxx/未分类.jm",
-                    id: "x2",
-                }]
-            }, {
-                label: "分类1",
+        var data = [{
+            label: "未分类",
+            id: "x1",
+            children: [{
+                label: "未分类.jm",
+                path: "c:/path/xxx/未分类.jm",
                 id: "x2",
+            }]
+        }, {
+            label: "分类1",
+            id: "x2",
+            children: [{
+                label: "分类1.jm",
+                path: "c:/path/xxx/分类1.jm",
+                id: "x4",
+            }, {
+                label: "分类2",
+                id: "x5",
                 children: [{
                     label: "分类1.jm",
                     path: "c:/path/xxx/分类1.jm",
-                    id: "x4",
-                }, {
-                    label: "分类2",
-                    id: "x5",
-                    children: [{
-                        label: "分类1.jm",
-                        path: "c:/path/xxx/分类1.jm",
-                        id: "x6"
-                    }]
+                    id: "x6"
                 }]
-            }],
-            reflex: {
-                "未分类.jm": "menu.0.children.0",
-                "分类1.jm": "menu.1.children.0",
-                "分类2.jm": "menu.1.children.1.children.0",
-            }
-        }
+            }]
+        }];
+
         var store = new MenuStore(data);
         //元素操作========================================================
         //查找=============
@@ -82,6 +76,10 @@
         //     //删除目录后，内部的文件移动到未知目录下，也就是menu[0].children下面
         // store.removeGroup("menu下的目录");
         // console.log("remove后", store.getStore())
+
+        console.log("重命名前", store.getStore())
+        store.renameGroup('分类1', "new分类1");
+        console.log("重命名后", store.getStore())
     </script>
 </body>
 

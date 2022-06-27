@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var menu = [{
+            label: "menu.0",
+            id: "x1",
+            children: [{
+                label: "menu.0.children",
+                path: "c:/path/xxx/未分类.jm",
+                id: "x2",
+            }]
+        }, {
+            label: "menu.1",
+            id: "x2",
+            children: [{
+                label: "menu.1.children.0",
+                path: "c:/path/xxx/分类1.jm",
+                id: "x4",
+            }, {
+                label: "menu.1.children.1",
+                id: "x5",
+                children: [{
+                    label: "menu.1.children.1.children.0",
+                    path: "c:/path/xxx/分类1.jm",
+                    id: "x6"
+                }]
+            }]
+        }];
+
+
+
+        var pathobj = {};
+
+        function createPathObj(data, basePath) {
+            for (let i = 0; i < data.length; i++) {
+                let item = data[i];
+                pathobj[item.label] = `${basePath}.${i}`; //用文件名做key
+                if (Array.isArray(item.children) && item.children.length) {
+                    createPathObj(item.children, `${basePath}.${i}.children`)
+                }
+            }
+        }
+        createPathObj(menu, "menu");
+
+
+        console.log(pathobj)
+    </script>
+</body>
+
+</html>

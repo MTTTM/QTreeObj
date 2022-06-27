@@ -7,13 +7,31 @@ function MenuStore(obj) {
         reflex: {},
         menu: []
     };
+    this._maxloop = 100000; //限制最大轮询10W次，超出就不再处理
+    this._index = 0;
+    this.fileNameStr = 'label'; //默认展示的名字字段
     if (obj) {
         this.initStore(obj);
     }
 }
 //初始化数据
-MenuStore.prototype.initStore = function(obj) {
-        this._store = obj;
+MenuStore.prototype.initStore = function(obj, labelStr) {
+    this._store.menu = obj;
+    if (typeof labelStr === 'string') {
+        this.fileNameStr = labelStr;
+    }
+    this._initReflex(obj, "menu"); //初始化文件名和路径的关系
+    console.log("初始化后的文件名和路径对应关系", this._store.reflex)
+}
+MenuStore.prototype._initReflex = function(data, basePath) {
+        for (let i = 0; i < data.length; i++) {
+            this._index++;
+            let item = data[i];
+            this._store.reflex[item[this.fileNameStr]] = `${basePath}.${i}`; //用文件名做key
+            if (Array.isArray(item.children) && item.children.length && this._index <= this._maxloop) {
+                this._initReflex(item.children, `${basePath}.${i}.children`)
+            }
+        }
     }
     //读取store
 MenuStore.prototype.getStore = function() {
@@ -31,7 +49,7 @@ MenuStore.prototype.add = function(fileName, path, fileObj) {
                 menuPathObj.push(fileObj);
             } else {
                 menuPathObj.push({
-                    label: fileName,
+                    [this.fileNameStr]: fileName,
                     id: new Date().getTime(),
                 });
             }
@@ -94,7 +112,7 @@ MenuStore.prototype.removeByName = function(fileName) {
     return true;
 }
 MenuStore.prototype.getInfoByFileName = function(fileName) {
-        let objPath = data.reflex[fileName];
+        let objPath = this._store.reflex[fileName];
         if (!objPath) {
             return null;
         }
@@ -103,6 +121,7 @@ MenuStore.prototype.getInfoByFileName = function(fileName) {
     }
     //返回文件夹或文件的路径
 MenuStore.prototype.getItemPath = MenuStore.prototype.getDirPath = function(name) {
+        console.log("this._store.reflex", this._store.reflex, "name", name)
         return this._store.reflex[name];
     }
     //根据要删除子节点的路径数组，来删除该子节点，并返回该子节点
@@ -140,8 +159,8 @@ MenuStore.prototype.move = function(soursePath, targetPath) {
             //修正存储位置
         targetPathObj.push(movedItem);
         //更正路径
-        this._store.reflex[movedItem.label] = `menu.0.children.${this._store.menu[0].children.length - 1
-    }`;
+        this._store.reflex[movedItem[this.fileNameStr]] = `menu.0.children.${this._store.menu[0].children.length - 1
+        }`;
 
     }
     //解析路径为对象
@@ -180,12 +199,13 @@ MenuStore.prototype.addGroup = function(dirName, path) {
         let target = this.parsePathStr(path);
         console.log("target", target);
         if (!Array.isArray(target) && !Array.isArray(target.children)) {
-            throw `目标路径${path} 不是根目录，或目标路径下没有children`;
+            console.warn(`目标路径${path} 不是根目录，或目标路径下没有children`);
+            return false;
         }
         //挂载非根节点下班
         if (target.children) {
             target.children.push({
-                label: dirName,
+                [this.fileNameStr]: dirName,
                 id: new Date().getTime(),
                 children: []
             })
@@ -193,12 +213,13 @@ MenuStore.prototype.addGroup = function(dirName, path) {
         } else {
             //挂载menu下面
             target.push({
-                label: dirName,
+                [this.fileNameStr]: dirName,
                 id: new Date().getTime(),
                 children: []
             })
             this._store.reflex[dirName] = `${path}.${target.length - 1}`;
         }
+        return true;
     }
     //获取目录下所有的文件名
 MenuStore.prototype._getAllItem = function(pathStr) {
@@ -209,7 +230,7 @@ MenuStore.prototype._getAllItem = function(pathStr) {
     function getLabelsPath(e) {
         if (e.children && Array.isArray(e.children)) {
             e.children.forEach(item => {
-                fileNamesPaths.push(self._store.reflex[item.label]);
+                fileNamesPaths.push(self._store.reflex[item[this.fileNameStr]]);
                 if (item.children && Array.isArray(e.children)) {
                     getLabelsPath(item);
                 }
@@ -222,6 +243,10 @@ MenuStore.prototype._getAllItem = function(pathStr) {
 }
 MenuStore.prototype.removeGroup = function(dirName) {
     let pathStr = this.getDirPath(dirName);
+    if (!pathStr) {
+        console.warn(`目录 ${dirName}不存在`)
+        return false;
+    }
     let self = this;
     let pathArr = pathStr.split(".");
     let soursePaths = this._getAllItem(pathStr);
@@ -230,6 +255,19 @@ MenuStore.prototype.removeGroup = function(dirName) {
         self.move(item, "menu.0.children")
     })
     this._parentRemoveItemByItemPathArr(pathArr);
-    // console.log("删除目录", dirName, "路径", target)
+    return true;
+
+}
+MenuStore.prototype.renameGroup = function(dirName, newName) {
+    let pathStr = this.getDirPath(dirName);
+    if (!pathStr) {
+        console.warn(`目录 ${dirName}不存在`)
+        return false;
+    }
+    let data = this.parsePathStr(pathStr);
+    data[this.fileNameStr] = newName;
+    this._store.reflex[newName] = pathStr;
+    delete this._store.reflex[dirName];
+    return true;
 
 }
