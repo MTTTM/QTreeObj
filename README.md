@@ -27,12 +27,12 @@ BSD 3-Clause License
 ```javascript
   var data = ["文件1", "文件2"];
     const store = new QTreeObj(data, { formated: false });
-
+```
 
 ## 方法
 
 
-```
+
 ### 文件操作
 | name      | Description | 参数    |返回|
 | :---        |    :----   |          :--- |:--- |
