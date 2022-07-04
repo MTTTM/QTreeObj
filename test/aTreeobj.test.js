@@ -36,3 +36,16 @@ test("移除某个目录下的元素", () => {
     store.removeFromDir("文件1", "未分类");
     expect(store._store.menu[0].children.length).toBe(1);
 });
+test("移除某个的元素", () => {
+    var data = ["文件1", "文件2"];
+    const store = new MenuStore(data, false);
+    store.removeByName("文件1");
+    expect(store._store.menu[0].children.length).toBe(1);
+});
+
+test("rename某个的元素", () => {
+    var data = ["文件1", "文件2"];
+    const store = new MenuStore(data, false);
+    store.rename("文件1", "新文件1");
+    expect(store._store.menu[0].children[0].label).toBe("新文件1");
+});

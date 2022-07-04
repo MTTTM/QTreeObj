@@ -135,6 +135,34 @@ MenuStore.prototype.removeByName = function(fileName) {
     }
     return true;
 };
+MenuStore.prototype.rename = function(oldFileName, newFileName) {
+    let pathStr = this._store.reflex[oldFileName];
+    if (!pathStr) {
+        console.warn(`rename提示不存在${oldFileName}以及相关数据`);
+        return null;
+    }
+    let pathArr = pathStr.split(".");
+    //根据最后一个索引是不是数据来判断，路径匹配到的是不是children下面的数组元素
+    let isChildItem = !Number.isNaN(Number(pathArr[pathArr.length - 1]));
+    // console.log("isChildItem", pathArr, 'pathStr', pathStr)
+    if (isChildItem) {
+        let menuPathObj = this.parsePathStr(pathStr);
+        console.log("menuPathObj", menuPathObj);
+        if (menuPathObj) {
+            menuPathObj.label = newFileName;
+            this._store.reflex[newFileName] = pathStr;
+            delete this._store.reflex[oldFileName];
+            return true;
+        } else {
+            console.warn(`rename提示不存在${oldFileName}以及相关数据1`);
+            return null;
+        }
+    } else {
+        // delete menuPathObj;
+    }
+    return null;
+};
+
 MenuStore.prototype.getInfoByFileName = function(fileName) {
     let objPath = this._store.reflex[fileName];
     if (!objPath) {
