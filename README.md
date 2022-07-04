@@ -16,11 +16,15 @@ BSD 3-Clause License
 | addToDir(arg1,arg2)     |  添加一个新元素到指定目录      | arg1文件名字,arg2:目录名字,arg3:添加个包含文件名的对象(可选)   |成功true，失败false|
 | removeFromDir(arg1,arg2)   | 移除某个目录下的一个元素        | arg1文件名字,arg2目录名字     |成功true，失败false|
 | removeByName(arg1)   | 某个目录下的一个元素        | arg1文件名字    |成功true，失败false|
+| rename(arg1,arg2)   | 重命名文件名        | arg1旧文件名字,arg2新的文件名    |成功true，失败false|
+
+
+
 
 ### 文件夹操作
 | name      | Description | 参数    |返回|
 | :---        |    :----   |          :--- |:--- |
-| addGroup(arg1,arg2)     |  添加一个目录      | arg1目录名字,arg2:路径 | 成功true，失败false|
+| addGroup(arg1,arg2)     |  添加一个目录      | arg1目录名字,arg2:路径(**可选**，如果没有默认放到根数组最后一个) | 成功true，失败false|
 | removeGroup(arg1)   | 移除某个目录下       | arg1目录  | 成功true，失败false|
 | renameGroup(arg1,arg2)   | 从命名目录       | arg1旧的目录名字,arg2新的目录名名字  | 成功true，失败false|
 
@@ -28,10 +32,10 @@ BSD 3-Clause License
 ### 初始化数据
 | name      | Description | 参数    |
 | :---        |    :----   |          :--- |:--- |
-| initStore(arg1,arg2)    |  初始化数据     | arg1初始化数据,第一个数组会当做未分类目录处理,arg2:用来展示的字段名字(同时也是维护数据路径对象的key) |
+| initStore(arg1,arg2)    |  初始化数据     | arg1初始化数据,第一个数组会当做未分类目录处理,arg2:{formated:boolean,fileNameStr:string,defaultGroupLabelName:string},**formated** 是否是格式化后的数据，默认false,**fileNameStr**显示的文件名字段默认是label,**defaultGroupLabelName**默认为分类的字段，默认未分类
 |parsePathStr(arg1,arg2)|根据路径来得到在对象中的数据| arg1是字符串，以`.`分割,arg2是可选的对象，如果不传默认是内容数据|
 
-#### initStore arg1的格式如下
+#### initStore arg1的格式如下，如果opitons的formated为true
 
 除了label其他都是可选，label无法重复，重复就会覆盖，针对文件目录没有后缀和文件有后缀(一个目录里面文件名也不会出现重复)的方式，永远不会出现重复的情况
 
@@ -64,6 +68,13 @@ BSD 3-Clause License
             }]
         }];
 ```
+### 如果options的formated为false，第一个参数如下
+
+```javascript
+["字符串1","字符串2"]
+```
+
+
 
 以上数据内部会生成一个如下的对象
 
