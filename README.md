@@ -7,8 +7,8 @@
 ## License
 BSD 3-Clause License
 
+## 使用
 
-## 方法
 ```javascript
     var data = [{
         label: "未分类",
@@ -22,7 +22,17 @@ BSD 3-Clause License
     const store = new QTreeObj(data, { formated: true });
 
 ```
+或者
 
+```javascript
+  var data = ["文件1", "文件2"];
+    const store = new QTreeObj(data, { formated: false });
+
+
+## 方法
+
+
+```
 ### 文件操作
 | name      | Description | 参数    |返回|
 | :---        |    :----   |          :--- |:--- |
