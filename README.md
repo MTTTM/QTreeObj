@@ -9,6 +9,19 @@ BSD 3-Clause License
 
 
 ## 方法
+```javascript
+    var data = [{
+        label: "未分类",
+        id: "x1",
+        children: [{
+            label: "未分类.jm",
+            path: "c:/path/xxx/未分类.jm",
+            id: "x2",
+        }, ],
+    }, ];
+    const store = new QTreeObj(data, { formated: true });
+
+```
 
 ### 文件操作
 | name      | Description | 参数    |返回|
