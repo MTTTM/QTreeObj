@@ -4,7 +4,7 @@ import babel from "rollup-plugin-babel";
 export default [{
     input: "src/index.js",
     output: {
-        name: "ContextMenu",
+        name: "QTreeObj",
         file: "tmp/index.js",
         format: "umd",
         sourcemap: true,
@@ -13,7 +13,7 @@ export default [{
     plugins: [
         babel({
             exclude: "node_modules/**",
-            "sourceType": "module"
+            sourceType: "module",
         }),
         livereload(),
         serve({

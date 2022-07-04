@@ -10,7 +10,7 @@
 
 <body>
     hello,world!!
-    <script src="./src/index.js"></script>
+    <script src="./tmp/index.js"></script>
     <script>
         var data = [{
             label: "未分类",
@@ -38,7 +38,7 @@
             }]
         }];
 
-        var store = new MenuStore(data);
+        var store = new QTreeObj(data);
         //元素操作========================================================
         //查找=============
         let fileInfo = store.getInfoByFileName("未分类.jm");

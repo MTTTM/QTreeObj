@@ -4,7 +4,7 @@ import copy from "rollup-plugin-copy";
 export default [{
     input: "src/index.js",
     output: {
-        name: "ContextMenu",
+        name: "QTreeObj",
         file: "dist/index.js",
         format: "umd",
         sourcemap: false,
@@ -20,9 +20,7 @@ export default [{
             },
         }),
         copy({
-            targets: [
-                { src: "qcontextmenu.d.ts", dest: "dist" },
-            ],
+            targets: [{ src: "QTreeObj.d.ts", dest: "dist" }],
             verbose: true, // 在终端进行console.log
         }),
     ],
