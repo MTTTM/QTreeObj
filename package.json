@@ -9,7 +9,7 @@
     "scripts": {
         "build": "rollup -c .config/rollup.config.js --no-strict  ",
         "dev": "rollup -c .config/rollup.config.dev.js -w --no-strict  ",
-        "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+        "test": "jest test",
         "test-legacy": "jest tests/legacy",
         "test-es6": "NODE_OPTIONS=--experimental-vm-modules jest tests/unit",
         "format": "prettier --config .config/prettierrc.json --ignore-path .config/prettierignore --write .",
