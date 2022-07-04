@@ -89,3 +89,52 @@ test("renameGroup文件夹", () => {
     store.renameGroup("已分类", "已分类2");
     expect(store._store.menu[1].label).toBe("已分类2");
 });
+
+test("update test add", () => {
+    var data = [{
+            label: "未分类",
+            id: "x1",
+            children: [{
+                    label: "文件1.txt"
+                },
+                {
+                    label: "文件2.txt"
+                },
+            ],
+        },
+        {
+            label: "已分类",
+            id: "x1",
+            children: [{
+                label: "文件5.txt"
+            }, ],
+        },
+    ];
+    const store = new QTreeObj(data, { formated: true });
+    store.update(['文件1.txt', "文件2.txt", '文件3.txt']);
+    expect(store.getStore().menu[0].children.length).toBe(3);
+});
+test("update test remove", () => {
+    var data = [{
+            label: "未分类",
+            id: "x1",
+            children: [{
+                    label: "文件1.txt"
+                },
+                {
+                    label: "文件2.txt"
+                },
+            ],
+        },
+        {
+            label: "已分类",
+            id: "x1",
+            children: [{
+                label: "文件5.txt"
+            }, ],
+        },
+    ];
+    const store = new QTreeObj(data, { formated: true });
+    store.update(['文件1.txt', "文件2.txt"]);
+    expect(store.getStore().menu[1].children.length).toBe(0);
+});

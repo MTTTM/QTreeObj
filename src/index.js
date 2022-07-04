@@ -53,6 +53,60 @@ MenuStore.prototype.initStore = function(obj, labelStr) {
     this._initReflex(this._store.menu, "menu"); //初始化文件名和路径的关系
     console.log("初始化后的文件名和路径对应关系", this._store.reflex);
 };
+//strArr是以文件名为数组元素的数组
+MenuStore.prototype.update = function(strArr) {
+    let deleteCollect = {}; //要被删除的元素
+    let keys = [];
+    let newKeys = []; //新增元素的
+    //记录删除的文件名
+    for (let key in this._store.reflex) {
+        let pathStr = this._store.reflex[key];
+        let pathArr = [];
+        let isFile = false;
+        if (pathStr) {
+            pathArr = pathStr.split(".");
+        }
+        if (pathArr[pathArr.length - 2] === "children") {
+            isFile = true;
+        }
+        //不删除目录目录
+        if (strArr.indexOf(key) == -1 && isFile) {
+            deleteCollect[key] = this._store.reflex[key];
+        }
+        keys.push(key);
+    }
+    //记录新增的文件名
+    for (let i = 0; i < strArr.length; i++) {
+        if (keys.indexOf(strArr[i]) == -1) {
+            newKeys.push(strArr[i]);
+        }
+    }
+
+    function pushNewItems() {
+        let index = this._store.menu.findIndex(item => item.label === this.__defaultGroupLabelName);
+        newKeys.forEach(item => {
+            this._store.menu[index].children.push({
+                label: item,
+                id: new Date().getTime()
+            })
+            this._store.reflex[item] = `menu.0.children.${this._store.menu.length - 1}`
+        });
+    }
+    //处理新增的
+    if (this._store.menu.length && this._store.menu.some(item => item.label === this.__defaultGroupLabelName)) {
+        pushNewItems.bind(this)();
+    } else {
+        this._store.menu.push({
+            label: this.__defaultGroupLabelName,
+            id: new Date().getTime()
+        });
+        pushNewItems.bind(this)();
+    }
+    for (let key in deleteCollect) {
+        this.removeByName(key);
+    }
+    // console.log("getStore", this.getStore())
+}
 MenuStore.prototype._initReflex = function(data, basePath) {
     for (let i = 0; i < data.length; i++) {
         this._index++;
@@ -147,9 +201,7 @@ MenuStore.prototype.removeByName = function(fileName) {
     } else {
         // delete menuPathObj;
     }
-
-    let menuPathObj = this.parsePathStr(pathStr);
-    if (menuPathObj) {
+    if (this._store.reflex[fileName]) {
         delete this._store.reflex[fileName];
     }
     return true;
@@ -234,9 +286,8 @@ MenuStore.prototype.move = function(soursePath, targetPath) {
     //修正存储位置
     targetPathObj.push(movedItem);
     //更正路径
-    this._store.reflex[movedItem[this.fileNameStr]] = `menu.0.children.${
-    this._store.menu[0].children.length - 1
-  }`;
+    this._store.reflex[movedItem[this.fileNameStr]] = `menu.0.children.${this._store.menu[0].children.length - 1
+        }`;
 };
 //解析路径为对象
 /**
@@ -291,9 +342,8 @@ MenuStore.prototype.addGroup = function(dirName, path) {
             id: new Date().getTime(),
             children: [],
         });
-        this._store.reflex[dirName] = `${path}.children.${
-      target.children.length - 1
-    } `;
+        this._store.reflex[dirName] = `${path}.children.${target.children.length - 1
+            } `;
     } else {
         //挂载menu下面
         target.push({

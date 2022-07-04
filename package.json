@@ -1,7 +1,7 @@
 {
-    "name": "QTreeObj",
+    "name": "qtreeobj",
     "version": "0.0.3",
-    "description": "QTreeObj is a simple  contextmenu menu tool for web",
+    "description": "QTreeObj is a simple virtual directory object management tool",
     "main": "dist/index.js",
     "files": [
         "dist"
