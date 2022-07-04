@@ -3,15 +3,27 @@
  * 核心是用路径来读写
  * obj 可能是普通数据，也可能是格式化后的数组
  * */
-function MenuStore(obj, formated) {
+function MenuStore(obj, optionObj) {
     this._store = {
         reflex: {},
         menu: [],
     };
-    this.__format = formated === undefined ? false : true;
+    let defaultOptions = {
+        formated: false,
+        fileNameStr: "label",
+        defaultGroupLabelName: "未分类",
+    };
+    let options =
+        typeof optionObj === "object" ?
+        Object.assign({}, defaultOptions, optionObj) :
+        defaultOptions;
+
     this._maxloop = 100000; //限制最大轮询10W次，超出就不再处理
     this._index = 0;
-    this.fileNameStr = "label"; //默认展示的名字字段
+    console.log("options", options);
+    this.__format = options.formated;
+    this.fileNameStr = options.fileNameStr; //默认展示的名字字段
+    this.__defaultGroupLabelName = options.defaultGroupLabelName; //未分类数组，默认展示名字，并且无法通过removeGroup移除
     if (obj) {
         this.initStore(obj);
     }
@@ -20,7 +32,7 @@ function MenuStore(obj, formated) {
 MenuStore.prototype.initStore = function(obj, labelStr) {
     //非格式化，也就是普通数组，
     //数组元素格式为【文件名字符串】
-    if (!!this.__format && Array.isArray(obj)) {
+    if (!this.__format && Array.isArray(obj)) {
         this._store.menu = [{
             label: "未分类",
             id: new Date().getTime(),
@@ -45,12 +57,19 @@ MenuStore.prototype._initReflex = function(data, basePath) {
     for (let i = 0; i < data.length; i++) {
         this._index++;
         let item = data[i];
+        console.log(
+            "itemitemitemitemitem",
+            item,
+            "item[this.fileNameStr]",
+            item[this.fileNameStr]
+        );
         this._store.reflex[item[this.fileNameStr]] = `${basePath}.${i}`; //用文件名做key
         if (
             Array.isArray(item.children) &&
-            item.children.length &&
+            item.children.length > 0 &&
             this._index <= this._maxloop
         ) {
+            console.log("item.children", item.children);
             this._initReflex(item.children, `${basePath}.${i}.children`);
         }
     }
@@ -251,6 +270,14 @@ MenuStore.prototype.parsePathStr = function(str, data) {
 };
 //新增目录
 MenuStore.prototype.addGroup = function(dirName, path) {
+    if (!path) {
+        this._store.menu.push({
+            label: dirName,
+            children: [],
+        });
+        this._store.reflex[dirName] = `menu.${this._store.menu.length - 1}`;
+        return true;
+    }
     let target = this.parsePathStr(path);
     console.log("target", target);
     if (!Array.isArray(target) && !Array.isArray(target.children)) {
@@ -299,6 +326,10 @@ MenuStore.prototype._getAllItem = function(pathStr) {
     return fileNamesPaths;
 };
 MenuStore.prototype.removeGroup = function(dirName) {
+    if (dirName === this.__defaultGroupLabelName) {
+        console.warn(`目录 ${dirName}不允许删除`);
+        return false;
+    }
     let pathStr = this.getDirPath(dirName);
     if (!pathStr) {
         console.warn(`目录 ${dirName}不存在`);
