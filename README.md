@@ -23,17 +23,17 @@ BSD 3-Clause License
 
 ### 文件夹操作
 | name      | Description | 参数    |返回|
-| :---        |    :----   |          :--- |:--- |
+| :---        |    :----   |  :--- |:--- |
 | addGroup(arg1,arg2)     |  添加一个目录      | arg1目录名字,arg2:路径(**可选**，如果没有默认放到根数组最后一个) | 成功true，失败false|
 | removeGroup(arg1)   | 移除某个目录下       | arg1目录  | 成功true，失败false|
 | renameGroup(arg1,arg2)   | 从命名目录       | arg1旧的目录名字,arg2新的目录名名字  | 成功true，失败false|
 
 
 ### 初始化数据
-| name      | Description | 参数    |
+| name      | Description | 参数    | |
 | :---        |    :----   |          :--- |:--- |
-| initStore(arg1,arg2)    |  初始化数据     | arg1初始化数据,第一个数组会当做未分类目录处理,arg2:{formated:boolean,fileNameStr:string,defaultGroupLabelName:string},**formated** 是否是格式化后的数据，默认false,**fileNameStr**显示的文件名字段默认是label,**defaultGroupLabelName**默认为分类的字段，默认未分类
-|parsePathStr(arg1,arg2)|根据路径来得到在对象中的数据| arg1是字符串，以`.`分割,arg2是可选的对象，如果不传默认是内容数据|
+| initStore(arg1,arg2)    |  初始化数据     | arg1初始化数据,第一个数组会当做未分类目录处理,arg2:{formated:boolean,fileNameStr:string,defaultGroupLabelName:string},**formated** 是否是格式化后的数据，默认false,**fileNameStr**显示的文件名字段默认是label,**defaultGroupLabelName**默认为分类的字段，默认未分类 |-|
+|parsePathStr(arg1,arg2)|根据路径来得到在对象中的数据| arg1是字符串，以`.`分割,arg2是可选的对象，如果不传默认是内容数据| -|
 
 #### initStore arg1的格式如下，如果opitons的formated为true
 
